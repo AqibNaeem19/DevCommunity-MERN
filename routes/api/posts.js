@@ -85,4 +85,35 @@ router.get('/:post_id', auth, async (req, res) => {
   }
 })
 
+// @route   DELETE api/posts/:post_id
+// @desc    Delete a post by its id
+// @access  Private
+router.delete('/:post_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findOne({ id: req.params.post_id});
+
+    //  If no post found by specific id, send error message
+    if (!post){
+      return res.status(404).json({ msg: 'Post not found'});
+    }
+
+    // It checks the post object user id and the request user id, if the 2 matches,
+    //  then it means the user is the creator of the post and is authorized to delete,
+    //  it, otherwise no authentication user can remove others posts.
+    if (post.user.toString() !== req.user.id){
+      return res.status(401).json({ msg: 'Not authorize to delete post'});
+    }
+
+    await post.remove();
+    res.json({ msg: 'Post deleted Successfully'});
+
+  } catch (error) {
+    console.error(error.message);
+    if ( error.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Post not found to delete'})
+    }
+    res.status(500).send('Server Error')
+  }
+})
+
 module.exports = router;
