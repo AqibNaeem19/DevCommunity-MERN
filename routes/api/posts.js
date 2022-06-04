@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
+const request = require('request');
 
 // @route   POST api/posts
 // @desc    Create a post
@@ -113,6 +114,29 @@ router.delete('/:post_id', auth, async (req, res) => {
       return res.status(404).json({ msg: 'Post not found to delete'})
     }
     res.status(500).send('Server Error')
+  }
+});
+
+// @route   PUT api/posts/like/:post_id
+// @desc    Like a post
+// @access  Private
+router.put('/like/:post_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findOne({ id: req.params.post_id});
+
+    //  Check if the post has already liked
+    if ( post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+      return res.status(400).json({ msg: 'Post already liked'})
+    }
+
+    post.likes.unshift({ user: req.user.id});
+    await post.save();
+
+    res.json(post.likes);
+
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
   }
 })
 
