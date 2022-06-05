@@ -122,7 +122,7 @@ router.delete('/:post_id', auth, async (req, res) => {
 // @access  Private
 router.put('/like/:post_id', auth, async (req, res) => {
   try {
-    const post = await Post.findOne({ id: req.params.post_id});
+    const post = await Post.findOne({ _id: req.params.post_id});
 
     //  Check if the post has already liked
     if ( post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
@@ -147,8 +147,6 @@ router.put('/unlike/:post_id', auth, async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.post_id});
 
-    console.log('Post likes', post.likes.user);
-    console.log('registered user', req.user.id)
     //  Check if the post has been liked
     if ( post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
       return res.status(400).json({ msg: 'Post is not liked'})
