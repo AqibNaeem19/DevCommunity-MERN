@@ -67,7 +67,7 @@ router.get('/', auth, async (req, res) => {
 // @access  Private
 router.get('/:post_id', auth, async (req, res) => {
   try {
-    const post = await Post.findOne({ id: req.params.post_id});
+    const post = await Post.findOne({ _id: req.params.post_id});
 
     //  If no post found by specific id, send error message
     if (!post){
@@ -91,7 +91,7 @@ router.get('/:post_id', auth, async (req, res) => {
 // @access  Private
 router.delete('/:post_id', auth, async (req, res) => {
   try {
-    const post = await Post.findOne({ id: req.params.post_id});
+    const post = await Post.findOne({ _id: req.params.post_id});
 
     //  If no post found by specific id, send error message
     if (!post){
