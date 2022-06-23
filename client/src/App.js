@@ -1,9 +1,11 @@
+import React, { Fragment } from 'react';
+import './App.css';
 
 function App() {
   return (
-    <div >
-      <h1>Hello React JS</h1>
-    </div>
+    <Fragment>
+      <h1>Hello</h1>
+    </Fragment>
   );
 }
 
