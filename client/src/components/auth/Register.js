@@ -1,7 +1,16 @@
 import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { setAlert } from '../../actions/alert';
 
-const Register = () => {
+/*  connect() requires props in the component parameters 
+    to call an action. We want dispatch setAlert action 
+    in this component. Instead of used props.setAlert to 
+    dispatch action, we can destruct the action and avoid 
+    using props again and again. props.setAlert is equal to 
+    setAlert and dispatch the same action with the help of 
+    connect() function. */
+const Register = ( {setAlert} ) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,7 +28,7 @@ const Register = () => {
   const onSubmit = event => {
     event.preventDefault();
     if(password !== password2){
-      console.log('passwords do not match');
+      setAlert('passwords do not match', 'danger');
     } else {
       console.log(formData)
     }
@@ -80,4 +89,5 @@ const Register = () => {
   )
 }
 
-export default Register;
+// connect() function connects a react component to a redux store.
+export default connect(null, { setAlert })(Register);
